@@ -41,12 +41,19 @@ function titleTokens(Token, label, level) {
     open.attrSet("class", "remark-note-title");
     const inline = createToken(Token, "inline", "", 0);
     inline.level = level + 1;
-    inline.content = label;
+    inline.content = "";
     inline.children = [createToken(Token, "text", "", 0)];
     inline.children[0].content = label;
     const close = createToken(Token, "paragraph_close", "p", -1);
     close.level = level;
     return [open, inline, close];
+}
+function parseBlockLines(md, state, startLine, endLine) {
+    const source = state.getLines(startLine, endLine, state.blkIndent, false);
+    if (source.trim().length === 0) {
+        return;
+    }
+    md.block.parse(source, md, state.env, state.tokens);
 }
 function qiitaNoteRule(md, options) {
     md.block.ruler.before("fence", "markdown_it_notes_qiita", (state, startLine, endLine, silent) => {
@@ -70,7 +77,7 @@ function qiitaNoteRule(md, options) {
         open.attrSet("data-note-type", type);
         open.attrSet("data-note-source", "qiita-note");
         state.tokens.push(...titleTokens(state.Token, options.titles[type], state.level + 1));
-        state.md.block.tokenize(state, startLine + 1, nextLine);
+        parseBlockLines(state.md, state, startLine + 1, nextLine);
         const close = state.push("markdown_it_note_close", "div", -1);
         close.block = true;
         state.line = nextLine < endLine ? nextLine + 1 : nextLine;
