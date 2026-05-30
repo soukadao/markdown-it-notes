@@ -1,0 +1,26 @@
+{
+  "name": "@soukadao/markdown-it-notes",
+  "version": "0.1.0",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node --test tests/*.test.cjs"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^25.0.0",
+    "typescript": "^6.0.3"
+  }
+}
